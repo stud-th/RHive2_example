@@ -44,13 +44,33 @@ shinyServer(function(input, output, session) {
   }) 
   arrangeIris_sql <- reactive({
     show_query(iris_hive%>%arrange(base::as.name(local(input$irisColNameArrange))))
+  })
+  mutateFlights <- flights_hive %>% select(carrier, year, distance, air_time) %>% 
+                    mutate(speed = distance / air_time * 60) %>% collect()
+  headFlights <- reactive({
+    flights_hive%>%head(input$flightsHead)%>%collect()
   }) 
-
+  headFlights_sql <- reactive({
+    show_query(flights_hive%>%head(input$flightsHead))
+  }) 
 output$table1 <- renderDT({
   datatable(aggDelayFlights(),colnames = c("Hour", "Flights.Total"), rownames = F)
 })
 output$table2 <- renderPrint({ 
   aggDelayFlights_sql()
+})
+output$table3 <- renderPrint({ 
+  print(aggDelayFlights_code)
+})
+output$mutateFlights <- renderDT({
+  datatable(mutateFlights,colnames = c("carrier", "year", "distance", "air_time", "speed"), rownames = F)
+})
+output$mutateFlights_sql<- renderPrint({ 
+  show_query(flights_hive %>% select(carrier, year, distance, air_time ) %>% 
+               mutate(speed = distance / air_time * 60))
+})
+output$mutateFlights_code <- renderPrint({ 
+  print(mutateFlights_code)
 })
 output$selectIris <- renderDT({
   datatable(selectIris(),colnames = c(input$irisColName), rownames = F)
@@ -70,5 +90,13 @@ output$arrangeIris_sql <- renderPrint({
 output$arrangeIris_code <- renderPrint({ 
   print(arrangeIris_code)
 })
-
+output$headFlights <- renderDT({
+  datatable(headFlights(),colnames = c(colnames(flights)), rownames = F)
+})
+output$headFlights_sql<- renderPrint({ 
+  headFlights_sql()
+})
+output$headFlights_code <- renderPrint({ 
+  print(headFlights_code)
+})
 })

@@ -35,13 +35,15 @@ shinyUI(
                  numericInput("dictnce_val","Flight distance from:", 500),
                  sliderInput("delayFlightRange","Choose mintutes range of delyed flights:",
                              0,100,c(0,100),
-                             step = 5)),
-      box("SQL Query", textOutput("table2"))
+                             step = 5))),
+      fluidRow( 
+      box("SQL Query", textOutput("table2")),
+      box("R code", textOutput("table3"))
       )
       ),
       tabItem(tabName = "select",
-              fluidRow(
               h2("dplyr::select()"),
+              fluidRow(
               box(
                 selectInput("irisColName","Select columns to view", 
                             tolower(colnames(iris)),
@@ -58,6 +60,15 @@ shinyUI(
             ),
       tabItem(tabName = "mutate",
               h2("dplyr::mutate()"),
+              fluidRow(
+              box( "Speed calculated with formula:\nspeed = distance / air_time * 60")),
+              fluidRow(
+                box("SQL Query", textOutput("mutateFlights_sql")),
+                box("R code", textOutput("mutateFlights_code"))
+              ),
+              fluidRow(
+                box(title = "Data", DTOutput("mutateFlights"), width = 16 )
+              )
       ),
       tabItem(tabName = "filter",
               h2("dplyr::filter()"),
@@ -83,6 +94,15 @@ shinyUI(
       ),
       tabItem(tabName = "head",
               h2("dplyr::head()"),
+              fluidRow(
+              box(numericInput("flightsHead","Number of records to display:", 10))),
+              fluidRow(
+              box("SQL Query", textOutput("headFlights_sql")),
+              box("R code", textOutput("headFlights_code"))
+              ),
+              fluidRow(
+                box(title = "Data", DTOutput("headFlights"), width = 16 )
+              )
       ),
       tabItem(tabName = "join",
               h2("dplyr::join()"),
