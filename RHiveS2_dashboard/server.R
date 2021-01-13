@@ -5,6 +5,7 @@ library(shiny)
 library(ggplot2)
 library(ggthemes)
 source("functionCode.R")
+source("SQLQuery.R")
 shinyServer(function(input, output, session) {
   
 
@@ -21,7 +22,7 @@ shinyServer(function(input, output, session) {
       )
     sql_flights%>%collect()
   })
-   aggDelayFlights_sql <- reactive({
+  aggDelayFlights_sql <- reactive({
       show_query(modFlights %>% 
       filter(name %in% local(input$carrierName)) %>%
       group_by(name, hour) %>% 
@@ -32,7 +33,6 @@ shinyServer(function(input, output, session) {
         delayed_flight_cnt = n()
       ))
   })  
-  
   selectIris <- reactive({
     iris_hive%>%select(input$irisColName)%>%collect()
   }) 
@@ -45,14 +45,32 @@ shinyServer(function(input, output, session) {
   arrangeIris_sql <- reactive({
     show_query(iris_hive%>%arrange(base::as.name(local(input$irisColNameArrange))))
   })
-  mutateFlights <- flights_hive %>% select(carrier, year, distance, air_time) %>% 
-                    mutate(speed = distance / air_time * 60) %>% collect()
+  mutateFlights <- flights_hive %>% select(carrier, year, distance, air_time) %>% mutate(speed = distance / air_time * 60) %>% collect()
   headFlights <- reactive({
     flights_hive%>%head(input$flightsHead)%>%collect()
   }) 
   headFlights_sql <- reactive({
     show_query(flights_hive%>%head(input$flightsHead))
   }) 
+  filterFlights <- reactive({
+    flights_hive %>% select(carrier, hour, distance, air_time, dep_delay) %>%
+      filter(hour > (local(input$filterHourFlightRange[1]))-1) %>%
+      filter(hour < (local(input$filterHourFlightRange[2]))+1) %>%
+      filter(dep_delay > local(input$filterDelayFlightRange[1])) %>%
+      filter(dep_delay < local(input$filterDelayFlightRange[2])) %>%
+      collect()
+  }) 
+  filterFlights_sql <- reactive({
+      show_query(flights_hive %>% select(carrier, hour, distance, air_time, dep_delay) %>%
+                   filter(hour > (local(input$filterHourFlightRange[1]))-1) %>%
+                   filter(hour < (local(input$filterHourFlightRange[2]))+1) %>%
+                   filter(dep_delay > local(input$filterDelayFlightRange[1])) %>%
+                   filter(dep_delay < local(input$filterDelayFlightRange[2]))
+                   )
+  }) 
+  
+  
+  
 output$table1 <- renderDT({
   datatable(aggDelayFlights(),colnames = c("Hour", "Flights.Total"), rownames = F)
 })
@@ -71,6 +89,15 @@ output$mutateFlights_sql<- renderPrint({
 })
 output$mutateFlights_code <- renderPrint({ 
   print(mutateFlights_code)
+})
+output$filterFlights <- renderDT({
+  datatable(filterFlights(),colnames = c("carrier", "hour", "distance", "air_time","dep_delay"), rownames = F)
+})
+output$filterFlights_sql <- renderPrint({ 
+  filterFlights_sql()
+})
+output$filterFlights_code <- renderPrint({ 
+  print(filterFlights_code)
 })
 output$selectIris <- renderDT({
   datatable(selectIris(),colnames = c(input$irisColName), rownames = F)

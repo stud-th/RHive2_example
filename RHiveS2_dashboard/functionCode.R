@@ -12,3 +12,4 @@ arrangeIris_code <-"iris_hive %>% arrange(base::as.name(local(input$irisColNameA
 mutateFlights_code <- "flights_hive %>% select(carrier, year, distance, air_time, speed) %>% 
   mutate(speed = distance / air_time * 60)"
 headFlights_code <- "lol"
+filterFlights_code <- "lol2"

@@ -40,7 +40,7 @@ chosenCarrier <-
   head(7)%>%collect()
 
 
-
+verbFilterFlights <- modFlights
 # Filter data
 modFlights <- modFlights %>% 
   filter(!is.na(dep_delay),name %in% !!chosenCarrier$name)

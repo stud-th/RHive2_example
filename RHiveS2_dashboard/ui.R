@@ -71,7 +71,19 @@ shinyUI(
               )
       ),
       tabItem(tabName = "filter",
-              h2("dplyr::filter()"),
+              h2("dplyr::filter()"),fluidRow(
+                box(title = "Data", DTOutput("filterFlights")),
+                box(title = "Filters: ",
+                  sliderInput("filterHourFlightRange","Select hour range:",
+                                0,23,c(0,10),
+                                step = 1),
+                  sliderInput("filterDelayFlightRange","Select delay range:",
+                              0,100,c(0,10),
+                              step = 5))),
+              fluidRow( 
+                box("SQL Query", textOutput("filterFlights_sql")),
+                box("R code", textOutput("filterFlights_code"))
+              )
       ),
       tabItem(tabName = "arrange",
               fluidRow(
