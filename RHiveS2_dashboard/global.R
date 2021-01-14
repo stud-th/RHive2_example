@@ -25,7 +25,10 @@ options(scipen = 999)
 
 airlines_hive <- copy_to(conn, airlines,"airlines", overwrite=TRUE)
 flights_hive <- copy_to(conn, flights,"flights", overwrite=TRUE)
+flights_hive <- flights_hive%>%head(1000)
 iris_hive<- copy_to(conn, iris,"iris", overwrite=TRUE)
+
+carrierID <- airlines%>%select(carrier)%>%collect()
 
 
 # Join two data.frames

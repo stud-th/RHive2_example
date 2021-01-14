@@ -10,7 +10,6 @@ shinyUI(
     dashboardHeader(title = "RHiveS2"),
     dashboardSidebar(
       sidebarMenu(
-          menuItem("nested query", tabName = "nested", icon = icon("code")),
           menuItem("select()", tabName = "select", icon = icon("code")),
           menuItem("mutate()", tabName = "mutate", icon = icon("code")),
           menuItem("filter()", tabName = "filter", icon = icon("code")),
@@ -18,29 +17,13 @@ shinyUI(
           menuItem("group_by()", tabName = "groupby", icon = icon("code")),
           menuItem("head()", tabName = "head", icon = icon("code")),
           menuItem("join()", tabName = "join", icon = icon("code")),
-          menuItem("summarise()", tabName = "summarise", icon = icon("code"))
+          menuItem("summarise()", tabName = "summarise", icon = icon("code")),
+          menuItem("nested query", tabName = "nested", icon = icon("code"))
         )
     ),
     dashboardBody(
       tabItems(
-        tabItem(tabName = "nested",
-        fluidRow(
-        box(title = "Data", DTOutput("table1")),
-        box(
-          selectInput("carrierName","Select carrier", 
-                             local(chosenCarrier$name),
-                             selected = local(chosenCarrier$name)[1], 
-                             multiple = TRUE
-                 ),
-                 numericInput("dictnce_val","Flight distance from:", 500),
-                 sliderInput("delayFlightRange","Choose mintutes range of delyed flights:",
-                             0,100,c(0,100),
-                             step = 5))),
-      fluidRow( 
-      box("SQL Query", textOutput("table2")),
-      box("R code", textOutput("table3"))
-      )
-      ),
+        
       tabItem(tabName = "select",
               h2("dplyr::select()"),
               fluidRow(
@@ -54,9 +37,9 @@ shinyUI(
               box("R code", textOutput("selectIris_code"))
 
             ),
-            fluidRow(
+            
               box(title = "Data", DTOutput("selectIris"), width = 16 )
-            )
+            
             ),
       tabItem(tabName = "mutate",
               h2("dplyr::mutate()"),
@@ -66,9 +49,9 @@ shinyUI(
                 box("SQL Query", textOutput("mutateFlights_sql")),
                 box("R code", textOutput("mutateFlights_code"))
               ),
-              fluidRow(
+              
                 box(title = "Data", DTOutput("mutateFlights"), width = 16 )
-              )
+              
       ),
       tabItem(tabName = "filter",
               h2("dplyr::filter()"),fluidRow(
@@ -86,8 +69,8 @@ shinyUI(
               )
       ),
       tabItem(tabName = "arrange",
+              h2("dplyr::arrange()"),
               fluidRow(
-                h2("dplyr::arrange()"),
                 box(
                   selectInput("irisColNameArrange","Select columns to arrange data", 
                               tolower(colnames(iris)),
@@ -97,12 +80,25 @@ shinyUI(
                 box("SQL Query", textOutput("arrangeIris_sql")),
                 box("R code", textOutput("arrangeIris_code"))
               ),
-              fluidRow(
+             
                 box(title = "Data", DTOutput("arrangeIris"), width = 16 )
-              )
+              
       ),
       tabItem(tabName = "groupby",
               h2("dplyr::group_by()"),
+              fluidRow(
+                box(
+                  selectInput("groupbyCol","Select columns to arrange data", 
+                              tolower(colnames(flights)),
+                              selected = tolower(colnames(flights))[17], 
+                              multiple = FALSE)
+                ),
+                box("SQL Query", textOutput("groupbyFlights_sql")),
+                box("R code", textOutput("groupbyFlights_code"))
+              ),
+
+                box(title = "Data", DTOutput("groupbyFlights"), width = 16 )
+
       ),
       tabItem(tabName = "head",
               h2("dplyr::head()"),
@@ -112,15 +108,57 @@ shinyUI(
               box("SQL Query", textOutput("headFlights_sql")),
               box("R code", textOutput("headFlights_code"))
               ),
-              fluidRow(
+              
                 box(title = "Data", DTOutput("headFlights"), width = 16 )
-              )
+              
       ),
       tabItem(tabName = "join",
               h2("dplyr::join()"),
+              fluidRow(
+                box(title = "Data: flights", DTOutput("beforejoinFlights")),
+                box(title = "Data: airlines", DTOutput("beforejoinAirlines")),
+                ),
+              fluidRow(
+                box("SQL Query", textOutput("joinFlights_sql")),
+                box("R code", textOutput("joinFlights_code"))
+              ),
+              box(title = "Data: airlines with flights joined on carrier", DTOutput("joinFlights"), width = 16 ),
       ),
       tabItem(tabName = "summarise",
               h2("dplyr::summarise()"),
+              fluidRow(
+                box(
+                  selectInput("summariseCarrier","Select carrier to summary", 
+                              carrierID,
+                              selected = carrierID[1], 
+                              multiple = FALSE)
+                ),
+                box(title = "Data", DTOutput("summariseCarrier"))
+              
+              ),
+              
+              
+              fluidRow(box("SQL Query", textOutput("summariseCarrier_sql")),
+                       box("R code", textOutput("summariseCarrier_code")))
+              
+      ),
+      tabItem(tabName = "nested",
+              fluidRow(
+                box(title = "Data", DTOutput("table1")),
+                box(
+                  selectInput("carrierName","Select carrier", 
+                              local(chosenCarrier$name),
+                              selected = local(chosenCarrier$name)[1], 
+                              multiple = TRUE
+                  ),
+                  numericInput("dictnce_val","Flight distance from:", 500),
+                  sliderInput("delayFlightRange","Choose mintutes range of delyed flights:",
+                              0,100,c(0,100),
+                              step = 5))),
+              fluidRow( 
+                box("SQL Query", textOutput("table2")),
+                box("R code", textOutput("table3"))
+              )
       )
     )
   )

@@ -68,9 +68,33 @@ shinyServer(function(input, output, session) {
                    filter(dep_delay < local(input$filterDelayFlightRange[2]))
                    )
   }) 
+  groupbyFlights <- reactive({
+      flights_hive %>%select(local(input$groupbyCol))%>%
+      group_by(base::as.name(local(input$groupbyCol))) %>% count() %>%collect()
+  })
+  groupbyFlights_sql <- reactive({
+    show_query(flights_hive %>%
+                 group_by(base::as.name(local(input$groupbyCol))) %>% count())
+  })   
+  joinFlights <- flights_hive %>% inner_join(airlines_hive, by = 'carrier')%>%select(carrier,name, dest, time_hour)%>%collect()
+  joinFlights_sql <- reactive({
+    show_query(flights_hive %>%select(carrier,name, dest, time_hour)%>% inner_join(airlines_hive, by = 'carrier'))
+  })
+  summariseCarrier <- reactive({
+    flights_hive%>%group_by(carrier)%>%filter(carrier %in% local(input$summariseCarrier)) %>%   
+      summarise(
+      total_flights = n()
+    )%>%collect()
+  }) 
+  summariseCarrier_sql <- reactive({
+    show_query(flights_hive%>%group_by(carrier)%>%filter(carrier %in% local(input$summariseCarrier)) %>%   
+      summarise(
+        total_flights = n()
+      ))
+  }) 
   
   
-  
+
 output$table1 <- renderDT({
   datatable(aggDelayFlights(),colnames = c("Hour", "Flights.Total"), rownames = F)
 })
@@ -117,6 +141,15 @@ output$arrangeIris_sql <- renderPrint({
 output$arrangeIris_code <- renderPrint({ 
   print(arrangeIris_code)
 })
+output$groupbyFlights <- renderDT({
+  datatable(groupbyFlights(),colnames = c(input$groupbyCol), rownames = F)
+})
+output$groupbyFlights_sql <- renderPrint({ 
+  groupbyFlights_sql()
+})
+output$groupbyFlights_code <- renderPrint({ 
+  print(groupbyFlights_code)
+})
 output$headFlights <- renderDT({
   datatable(headFlights(),colnames = c(colnames(flights)), rownames = F)
 })
@@ -125,5 +158,29 @@ output$headFlights_sql<- renderPrint({
 })
 output$headFlights_code <- renderPrint({ 
   print(headFlights_code)
+})
+output$joinFlights <- renderDT({
+  datatable(joinFlights, colnames = c("carrier","name", "destination", "time") ,rownames = F)
+})
+output$joinFlights_sql<- renderPrint({ 
+  show_query(flights_hive%>% inner_join(airlines_hive, by = 'carrier') %>%select(carrier,name, dest, time_hour))
+})
+output$joinFlights_code <- renderPrint({ 
+  print(joinFlights_code)
+})
+output$beforejoinFlights <- renderDT({
+  datatable(flights_hive %>%select(carrier, dest, time_hour)%>% head(1000)%>%collect(), colnames = c("carrier", "dest", "time_hour") ,rownames = F)
+})
+output$beforejoinAirlines <- renderDT({
+  datatable(airlines_hive%>%collect(), colnames = c("carrier","name") ,rownames = F)
+})
+output$summariseCarrier <- renderDT({
+  datatable(summariseCarrier(), rownames = F)
+})
+output$summariseCarrier_sql <- renderPrint({ 
+  summariseCarrier_sql()
+})
+output$summariseCarrier_code <- renderPrint({ 
+  print(summariseCarrier_code)
 })
 })
