@@ -18,7 +18,8 @@ shinyUI(
           menuItem("head()", tabName = "head", icon = icon("code")),
           menuItem("join()", tabName = "join", icon = icon("code")),
           menuItem("summarise()", tabName = "summarise", icon = icon("code")),
-          menuItem("nested query", tabName = "nested", icon = icon("code"))
+          menuItem("nested query", tabName = "nested", icon = icon("code")),
+          menuItem("custom query", tabName = "custom", icon = icon("code"))
         )
     ),
     dashboardBody(
@@ -160,6 +161,33 @@ shinyUI(
                 box("R code", textOutput("table3"))
               )
       )
+      ,
+      tabItem(tabName = "custom",
+              fluidRow(
+                box(title = "Write R code: ", width = 12,
+                    column(width = 8, textInput(inputId = "custom",label = NULL, value = "iris_hive%>%select(sepal.length)")),
+                    column(width = 4,
+                      div(class="header", checked=NA,
+                          p("    "),
+                          p("%>%collect()")
+                      )
+                    )
+                    
+                )),
+              fluidRow(
+                  box(title = "Data", DTOutput("custom"))
+                )
+
+                
+
+              
+      # ,
+      # fluidRow(
+      #   box("SQL Query", textOutput("custom_sql")),
+      #   box("R code", textOutput("table3"))
+      # )
+       )
+      
     )
   )
   
