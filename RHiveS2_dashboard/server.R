@@ -95,12 +95,11 @@ shinyServer(function(input, output, session) {
   
   customQuery <- reactive({
     eval(parse(text =  paste0(local(input$custom),"%>%collect()")))
-#   
   })
-  # customQuery_sql <- reactive({
-  #   show_query(eval(local(input$custom)))
-  #   
-  # })
+  customQuery_sql <- reactive({
+    show_query(eval(parse(text =  local(input$custom))))
+
+  })
   
 
 output$table1 <- renderDT({
@@ -194,7 +193,7 @@ output$summariseCarrier_code <- renderPrint({
 output$custom <- renderDT({
   datatable(customQuery())
 })
-# output$custom_sql <- renderPrint({ 
-#   customQuery_sql()
-# })
+output$custom_sql <- renderPrint({ 
+   customQuery_sql()
+ })
 })

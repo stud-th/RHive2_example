@@ -175,6 +175,10 @@ shinyUI(
                     
                 )),
               fluidRow(
+                box("SQL Query", textOutput("custom_sql")),
+              ),
+              
+              fluidRow(
                   box(title = "Data", DTOutput("custom"))
                 )
 
