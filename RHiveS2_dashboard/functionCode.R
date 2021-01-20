@@ -16,5 +16,4 @@ filterFlights_code <- "flights_hive %>% select(carrier, hour, distance, air_time
 groupbyFlights_code <- "flights_hive %>% group_by(base::as.name(local(input$groupbyCol))) %>% count()"
 joinFlights_code<-"flights_hive %>% inner_join(airlines_hive, by = 'carrier')%>%select(carrier,name, dest, time_hour)"
 
-summariseCarrier_code<-"flights_hive%>%group_by(carrier)%>%filter(carrier %in% local(input$summariseCarrier)) %>%   summarise(total_flights = n()
-    )"
+summariseCarrier_code<-"flights_hive%>%group_by(carrier)%>%filter(carrier %in% local(input$summariseCarrier)) %>%   summarise(total_flights = n())"
