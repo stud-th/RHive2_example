@@ -5,7 +5,6 @@ library(shiny)
 library(ggplot2)
 library(ggthemes)
 source("functionCode.R")
-source("SQLQuery.R")
 shinyServer(function(input, output, session) {
   
 
