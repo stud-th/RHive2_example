@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+
+  R-container: 
+    container_name: shiny-app
+    image: shiny-app
+    ports:
+        - "8787:8787"
+
+  thrift-server: 
+    container_name: spark-thift-server
+    image: spark-thift-server
+    #command: tail -f /dev/null
+    ports:
+      - "10000:10000"
+      - "50:50"
+      - "4040:4040"
+      - "9083:9083"
+      
