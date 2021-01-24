@@ -10,7 +10,8 @@ services:
   thrift-server: 
     container_name: spark-thift-server
     image: spark-thift-server
-    #command: tail -f /dev/null
+    stdin_open: true
+    
     ports:
       - "10000:10000"
       - "50:50"
