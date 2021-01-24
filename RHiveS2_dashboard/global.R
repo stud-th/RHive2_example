@@ -7,9 +7,10 @@
 options(java.parameters = "-Xmx8g")
 library(shiny)
 library(dplyr)
-library(RHiveS2)
+#library(RHiveS2)
 library(rJava)
 library(nycflights13)
+devtools::load_all("/Users/zukow/Documents/GitHub/RHiveS2")
 
 cp=c("/Users/zukow/spark-2.2.1-bin-hadoop2.7/jars/hive-jdbc-1.2.1.spark2-standalone.jar","/Users/zukow/spark-2.2.1-bin-hadoop2.7/jars/hadoop-common-2.7.3.jar")
 .jinit(classpath=cp)
