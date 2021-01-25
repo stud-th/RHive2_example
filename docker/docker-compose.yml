@@ -1,4 +1,6 @@
 version: "3.7"
+
+
 services:
 
   R-container: 
@@ -6,6 +8,9 @@ services:
     image: shiny-app
     ports:
         - "8787:8787"
+    volumes:
+       - ./csv-data:/Docker/csv-data
+    
 
   thrift-server: 
     container_name: spark-thift-server
@@ -17,4 +22,6 @@ services:
       - "50:50"
       - "4040:4040"
       - "9083:9083"
-      
+    volumes:
+      - ./csv-data:/files/csv-data
+     

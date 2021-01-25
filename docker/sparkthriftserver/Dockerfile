@@ -68,8 +68,7 @@ ADD files/hive-site.xml $SPARK_CONF_DIR/
 ADD files/start.sh /
 ADD files/init.sh /
 ADD files/beeline.sh /
-#ADD /private/var/folders/q7 /
-#ADD /var/folders/q7/ptr5c8v916j9_v_gr1cd7jy40000gn/T/ /var/folders/q7/ptr5c8v916j9_v_gr1cd7jy40000gn/T/
+ADD files/csv-data /
 
 
 
