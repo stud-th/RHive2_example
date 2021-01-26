@@ -1,0 +1,5 @@
+inside rstudiothrift dir:
+
+$ bash rstudiothrift-build.sh
+
+Docker images will be build and "docker-compose up -d" command will be executed
