@@ -34,4 +34,5 @@ RUN R -e  'devtools::install_github("stud-th/RHiveS2", ref="5c3e5c506608cb3aed45
 
 COPY Docker /home/rstudio/
 COPY Docker/jars /home/rstudio/jars
+COPY Docker/RHiveS2_source /home/rstudio/RHiveS2_source
 

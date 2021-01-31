@@ -1,0 +1,32 @@
+Package: RHiveS2
+Type: Package
+Title: dplyr backend for Hive
+Version: 0.1.0
+Author: Agnieszka Zukowska
+Maintainer: Agnieszka Zukowska <zuk.ness@gmail.com>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Suggests: 
+    DBItest,
+    testthat
+Imports:
+    RJDBC,
+    DBI,
+    methods,
+    rJava,
+    dplyr,
+    dbplyr
+Collate: 
+    'helper-extr-pcgs.R'
+    'HiveS2Connection.R'
+    'HiveS2Driver.R'
+    'HiveS2Connector.R'
+    'HiveS2Result.R'
+    'dbDataType.R'
+    'dbListTables.R'
+    'dbi_transactions.R'
+    'dbplyr_table_hive.R'
